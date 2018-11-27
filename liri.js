@@ -1,15 +1,12 @@
+//===========================================================================
+// set up work
+//===========================================================================
+
+// 
 require("dotenv").config();
 
-
+// we will use axios packages to prepare data for queries
 var axios = required("axios");
-
-
-
-//===========================================================================
-// do we have log.txt file to log all transactions if not create it and open it
-//===========================================================================
-
-
 
 
 //===========================================================================
@@ -18,43 +15,11 @@ var axios = required("axios");
 var fs = require("fs");
 // get the liri command argument
 var liriCmd = process.argv[2];
-// get the artist, song argument
+// get the artist, song, movie etc argument
 var cmdArg = process.argv[3];
 
 
-//===========================================================================
-// create a prompt for the command and for the argument
-// coded out for now - if time we can prompt the user
-//===========================================================================
-// var inquirer = require("inquirer");
-// inquirer
-//     .prompt([
-//         // What command does the user want to run - give a list to choose from.
-//         {
-//             type: "list",
-//             message: "Which command do you wish to run?",
-//             choices: ["concert-this", "spotify-this-song", "movie-this", "do-what-it-says"],
-//             name: "liriCmd"
-//         },
-//         // what argument goes with the command.
-//         {
-//             type: "input",
-//             message: "What argument goes with your command selection?",
-//             name: "cmdArg"
-//         },
-//         // ask the user to confirm.
-//         {
-//             type: "confirm",
-//             message: "Are you sure?",
-//             name: "confirm",
-//             default: true
-//         }
-//     ])
-//     .then(function (inquirerResponse) {
-//         //===========================================================================
-//         // run the liri
-//         //===========================================================================
-//     }); //inquirer .then command
+
 
 
 //===========================================================================
@@ -63,8 +28,23 @@ var cmdArg = process.argv[3];
 
 
 //===========================================================================
+// define the use cases
+//===========================================================================
+//  node liri.js
+//  node liri.js concert-this 
+//  node liri.js concert-this "Imagine Dragons"
+//  node liri.js spotify-this-song 
+//  node liri.js spotify-this-song Radioactive
+//  node liri.js movie-this 
+//  node liri.js movie-this Frozen
+//  node liri.js do-what-it-says 
+
+//===========================================================================
 // error check and make sure we have two arguments
 //===========================================================================
+
+
+
 
 
 
@@ -76,6 +56,7 @@ switch (liriCmd) {
 
     case "concert-this":
         // search Bands in Town Artist Events API
+        // create the axios package we need to run query
 
         // write event information to the terminal
         console.log("Name of Venue: ");
@@ -86,6 +67,7 @@ switch (liriCmd) {
     case "spotify-this-song":
         // search Spotify API for song information
         // DEFAULT TO ACE OF BASE THE SIGN??????????????????????????????
+        // create the axios package we need to run query
 
         // write song information to the terminal
         console.log("Artist(s): ");
@@ -97,6 +79,23 @@ switch (liriCmd) {
     case "movie-this":
         // search OMDB API
         // DEFAULT TO MR NOBODY??????????????????????????????
+        // create the axios package we need to run query
+
+// // Include the request npm package (Don't forget to run "npm install request" in this folder first!)
+// var request = require("request");
+
+// // Then run a request to the OMDB API with the movie specified
+// request("http://www.omdbapi.com/?t=remember+the+titans&y=&plot=short&apikey=trilogy", function(error, response, body) {
+
+//   // If the request is successful (i.e. if the response status code is 200)
+//   if (!error && response.statusCode === 200) {
+
+//     // Parse the body of the site and recover just the imdbRating
+//     // (Note: The syntax below for parsing isn't obvious. Just spend a few moments dissecting it).
+//     console.log("The movie's rating is: " + JSON.parse(body).imdbRating);
+//   }
+// });
+
 
         // write movie information to the terminal
         console.log("Movie Title: ");
@@ -127,6 +126,9 @@ switch (liriCmd) {
 //===========================================================================
 // log the transaction
 //===========================================================================
+
+// do we have log.txt file to log all transactions if not create it and open it
+
 
 // create string depicting the transaction 
 appendString = "Command:" + liriCmd + " Argument:" + cmdArg;
