@@ -20,6 +20,11 @@ var inquirer = require("inquirer");
 var fs = require("fs");
 
 //===========================================================================
+// initiate use of moment for converting dates to a readable format 
+//===========================================================================
+var moment = require("moment");
+
+//===========================================================================
 // get the users command line arguments which define what we will do
 //===========================================================================
 inquirer
@@ -47,7 +52,10 @@ inquirer
                 },
                 ])
                     .then(function (inquirerResponse) {
+                        // perform the movie search
                         movieSearch(inquirerResponse.movie);
+                        // log transaction data
+                        logTransaction("movie-this", inquirerResponse.movie);
                     });
                 break;
             //end "movie-this" search
@@ -61,7 +69,10 @@ inquirer
                 },
                 ])
                     .then(function (inquirerResponse) {
+                        // perform the concert search
                         concertSearch(inquirerResponse.band);
+                        // log transaction data
+                        logTransaction("concert-this", inquirerResponse.band);
                     });
                 break;
             //end "concert-this" search
@@ -75,7 +86,10 @@ inquirer
                 },
                 ])
                     .then(function (inquirerResponse) {
+                        // perform the song search
                         songSearch(inquirerResponse.song);
+                        // log transaction data
+                        logTransaction("spotify-this-song", inquirerResponse.song);
                     });
                 break;
             //end "spotify-this-song" search
@@ -94,18 +108,24 @@ inquirer
                             case "movie-this":
                                 // search OMDB API for a movie
                                 movieSearch(cmdArg);
+                                // log transaction data
+                                logTransaction("movie-this", cmdArg);
                                 break;
                             //end "movie-this" search
 
                             case "concert-this":
                                 // search Bands in Town Artist Events API
                                 concertSearch(cmdArg);
+                                // log transaction data
+                                logTransaction("concert-this", cmdArg);
                                 break;
                             //end "concert-this" search
 
                             case "spotify-this-song":
                                 // search Spotify API for song information
                                 songSearch(cmdArg);
+                                // log transaction data
+                                logTransaction("spotify-this-song", cmdArg);
                                 break;
                             //end "spotify-this-song" search
 
@@ -119,23 +139,29 @@ inquirer
             default:
                 break;
         }
-
-        //===========================================================================
-        // log the transaction
-        //===========================================================================
-
-        // do we have log.txt file to log all transactions if not create it and open it
-
-        // create string depicting the transaction 
-        // appendString = "Command:" + liriCmd + " Argument:" + cmdArg;
-
-        // append the transaction to the log.txt file
-        // fs.appendFile("log.txt", appendString, function (err) {
-        //     if (err) { return console.log(err); }
-        // });
-
     }); //inquirer .then command
 
+//===========================================================================
+// log the transaction that took place to the log.txt file
+// input the command (selectedCmd) that was performed and the argument (userArg)
+// that was entered with the command.
+//===========================================================================
+function logTransaction(selectedCmd, userArg) {
+    // create the string we will append to the log.txt file
+    var logString = "\r\nCommand run: " + selectedCmd + ". Argument: " + userArg + ".";
+    // append the transaction to the log.txt file
+    fs.appendFile("log.txt", logString, function (err, data) {
+        if (err) {
+            return console.log(err);
+        }
+    });
+}
+
+//===========================================================================
+// concertSearch takes a band as input and searches Bands in Town Artists Events
+// API for concerts that the band will be performing. The function outputs info
+// about each upcoming event. 
+//===========================================================================
 function concertSearch(bandName) {
     // Create the query we need for BandInTown API with the band specified
     var queryUrl = "https://rest.bandsintown.com/artists/" + bandName + "/events?app_id=codingbootcamp";
@@ -144,16 +170,28 @@ function concertSearch(bandName) {
     // run the BandInTown API query
     axios.get(queryUrl).then(
         function (response) {
-            console.log(response.data);
+            // output the response data 
+            console.log("-------------------------------------------------------------------------------");
+            console.log("Here are upcoming concert venues for " + bandName + ".");
+            console.log("-------------------------------------------------------------------------------");
+            for (var i = 0; i < response.data.length; i++) {
+                var venue = response.data[i].venue;
+                var venueDate = response.data[i].datetime;
+                var venueDateFormatted = moment(venueDate).format("MM/DD/YYYY");
+                console.log("Name of Venue: " + venue.name + ".");
+                console.log("Venue Location: " + venue.city + ", " + venue.region + ", " + venue.country + ".");
+                console.log("Date of Event: " + venueDateFormatted + ".");
+                console.log("-------------------------------------------------------------------------------");
+            }
         }
-    )
-    // write event information to the terminal
-    console.log("--------------------------------------------");
-    console.log("Name of Venue: ");
-    console.log("Venue Location: ");
-    console.log("Date of Event: ");
+    );
 };
 
+//===========================================================================
+// movieSearch takes a movie as input and searches the OMDB API for info
+// about the movie. If no movie is provided - the movie "Mr Nobody" is provided
+// as a deafult. The function outputs info about the movie. 
+//===========================================================================
 function movieSearch(movieName) {
     // if the movie selection is left blank - default to "Mr Nobody"
     if (movieName === "") {
@@ -166,21 +204,39 @@ function movieSearch(movieName) {
     // run the OMDB API query
     axios.get(queryUrl).then(
         function (response) {
-            console.log(response.data);
+            // console.log(response.data);
+            // var ratingData = response.data.Ratings.Source
+            for (var i = 0; i < response.data.Ratings.length; i++) {
+                // get the rating data 
+                if (response.data.Ratings[i].Source = 'Internet Movie Database') {
+                    var IMDB_Rating = response.data.Ratings[i].Value;
+                }
+                if (response.data.Ratings[i].Source = 'Rotten Tomatoes') {
+                    var Rotten_Tomatoes_Rating = response.data.Ratings[i].Value;
+                }
+            };
+            // write song information to the terminal
+            console.log("-------------------------------------------------------------------------------");
+            console.log("Here is key data for the movie " + movieName + ".");
+            console.log("-------------------------------------------------------------------------------");
+            console.log("Movie Title: " + response.data.Title);
+            console.log("Year movie came out: " + response.data.Year);
+            console.log("IMDB Rating: " + IMDB_Rating);
+            console.log("Rotten Tomatoes Rating: " + Rotten_Tomatoes_Rating);
+            console.log("Country where movie was produced: " + response.data.Country);
+            console.log("Language of movie: " + response.data.Language);
+            console.log("Plot of the movie: " + response.data.Plot);
+            console.log("Actors in the movie: " + response.data.Actors);
+            console.log("-------------------------------------------------------------------------------");
         }
-    )
-    // write movie information to the terminal
-    console.log("--------------------------------------------");
-    console.log("Movie Title: ");
-    console.log("Year movie came out: ");
-    console.log("IMDB Rating: ");
-    console.log("Rotten Tomatoes Rating: ");
-    console.log("Country where movie was produced: ");
-    console.log("Language of movie: ");
-    console.log("Plot of the movie: ");
-    console.log("Actors in the movie: ");
+    );
 };
 
+//===========================================================================
+// songSearch takes a song as input and searches the Spotify API for info
+// about the song. If no song is provided - the song "The Sign" by Ace of Base
+// is provided as a deafult. The function outputs info about the song. 
+//===========================================================================
 function songSearch(songName) {
     // if the song selection is left blank - default to "The Sign" by "Ace of Base"
     if (songName === "") {
