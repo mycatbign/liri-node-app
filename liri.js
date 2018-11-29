@@ -178,9 +178,9 @@ function concertSearch(bandName) {
                 var venue = response.data[i].venue;
                 var venueDate = response.data[i].datetime;
                 var venueDateFormatted = moment(venueDate).format("MM/DD/YYYY");
-                console.log("Name of Venue: " + venue.name + ".");
+                console.log("Name of Venue:  " + venue.name + ".");
                 console.log("Venue Location: " + venue.city + ", " + venue.region + ", " + venue.country + ".");
-                console.log("Date of Event: " + venueDateFormatted + ".");
+                console.log("Date of Event:  " + venueDateFormatted + ".");
                 console.log("-------------------------------------------------------------------------------");
             }
         }
@@ -219,14 +219,14 @@ function movieSearch(movieName) {
             console.log("-------------------------------------------------------------------------------");
             console.log("Here is key data for the movie " + movieName + ".");
             console.log("-------------------------------------------------------------------------------");
-            console.log("Movie Title: " + response.data.Title);
-            console.log("Year movie came out: " + response.data.Year);
-            console.log("IMDB Rating: " + IMDB_Rating);
+            console.log("Movie Title:            " + response.data.Title);
+            console.log("Year movie came out:    " + response.data.Year);
+            console.log("IMDB Rating:            " + IMDB_Rating);
             console.log("Rotten Tomatoes Rating: " + Rotten_Tomatoes_Rating);
-            console.log("Country where movie was produced: " + response.data.Country);
-            console.log("Language of movie: " + response.data.Language);
-            console.log("Plot of the movie: " + response.data.Plot);
-            console.log("Actors in the movie: " + response.data.Actors);
+            console.log("Country where produced: " + response.data.Country);
+            console.log("Language of movie:      " + response.data.Language);
+            console.log("Plot of the movie:      " + response.data.Plot);
+            console.log("Actors in the movie:    " + response.data.Actors);
             console.log("-------------------------------------------------------------------------------");
         }
     );
@@ -238,25 +238,47 @@ function movieSearch(movieName) {
 // is provided as a deafult. The function outputs info about the song. 
 //===========================================================================
 function songSearch(songName) {
+
+    //===========================================================================
+    // initiate use of spotify 
+    //===========================================================================
+    var Spotify = require('node-spotify-api');
+    // getting keys to enable spotify search
+    var keys = require('./keys.js');
+    // create spotify variable
+    var spotify = new Spotify(keys.spotify);
+
     // if the song selection is left blank - default to "The Sign" by "Ace of Base"
     if (songName === "") {
         songName = "The Sign";
         songArtist = "Ace of Base";
     }
-    // Create the query we need for Spotify API with the song specified
-    var queryUrl = "http://www.spotify...";
-    // This line is just to help us debug against the actual URL.
-    console.log(queryUrl);
+
     // run the spotify API query
-    axios.get(queryUrl).then(
-        function (response) {
-            console.log(response.data);
-        }
-    )
-    // write song information to the terminal
-    console.log("--------------------------------------------");
-    console.log("Artist(s): ");
-    console.log("Song Name: ");
-    console.log("Preview Link: ");
-    console.log("Album: ");
+    spotify.search({
+        type: 'track',
+        query: songName,
+        limit: 3
+    }).then(function (response) {
+
+        // write song information to the terminal
+        console.log("-------------------------------------------------------------------------------");
+        console.log("Here are artists for your selected song " + songName + ".");
+        console.log("-------------------------------------------------------------------------------");
+
+        //each song sent back, we print out the info for it.
+        response.tracks.items.forEach(function (result) {
+            console.log("Artist(s):     " + result.artists[0].name);
+            console.log("Song Name:     " + result.name);
+            console.log("Preview Link:  " + result.name);
+            console.log("Album:         " + result.album.name);
+            console.log("On Spotify:    " + result.external_urls.spotify);
+            console.log("-------------------------------------------------------------------------------");
+        }) // end outputting results
+    }) // end the .then function
+
+        // if something goes wrong
+        .catch(function (err) {
+            console.log("No song by that name found");
+        });
 };
