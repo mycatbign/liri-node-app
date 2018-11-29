@@ -3,3 +3,8 @@ Command run: concert-this. Argument: Red Hot Chilli Peppers.
 Command run: spotify-this-song. Argument: Hey Jude.
 Command run: movie-this. Argument: Frozen.
 
+
+Command run: concert-this. Argument: Dave Matthews Band.
+Command run: movie-this. Argument: scarface.
+Command run: spotify-this-song. Argument: Hotel California.
+Command run: spotify-this-song. Argument: "I Want it That Way".

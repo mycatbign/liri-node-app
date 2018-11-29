@@ -3,6 +3,8 @@
 # Description:
 liri.js is a node app that takes user inputs around movies, songs, and bands and searches OMDB, Spotify, and Bands in Town to return useful information. Users first select which type of search they would like to perform and then can enter specifically what they wish to search for. For instance the user can select a "movie" search and then enter in the name of a movie such as "Frozen". The app will execute a search on OMDB and return movie data. Finally the app will log all transactions in to log.txt. 
 
+To see LIRI in action please go [here](https://drive.google.com/open?id=1MqvmMtG03DoJ7DnRVcF_IA9iNNXGlbnl): 
+
 ## Current commands supported include:
   
 * spotify-this-song 	<song name>
