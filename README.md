@@ -29,25 +29,25 @@ liri.js is a node app that takes user inputs around movies, songs, and bands and
 
 ###Concert-This Image
 This image demonstrates selecting "Concert-This" and then entering "Red Hot Chilli Peppers":
-![Concert-This](/images/Concert-This.png)
+![](/images/Concert-This.PNG)
 
 ###Do-What-It-Says Image
 This image demonstrates selecting "Do-What-It-Says" which in turn reads the random.txt file and reads the entry and performs the search. In this case the search was "Spotify-This-Song" and the some is "I Want it That Way":
-![Do-What-It-Says](/images/Do-What-It-Says.png)
+![](/images/Do-What-It-Says.PNG)
 
 ###Movie-This (Blank) Image
 This image demonstrates selecting "Movie-This" but not entering any movie. As a result the display is for "Mr. Nobody":
-![Movie-This-Blank](/images/Movie-This Blank.png)
+![](/images/Movie-This Blank.PNG)
 
 ###Movie-This Image
 This image demonstrates selecting "Movie-This" and then entering "Frozen":
-![Movie-This](/images/Movie-This.png)
+![](/images/Movie-This.PNG)
 
 ###Spotify-This-Song Image
 This image demonstrates selecting "Spotify-This-Song" and then entering "Hey Jude":
-![Spotify-This-Song](/images/Spotify-This-Song.png)
+![](/images/Spotify-This-Song.PNG)
 
-#Remaining Challenges
-* Spotify-This-Song will not yet default to "The Sign" by Ace of Base.
-* No error checking on the Concert-This if no band is entered.
+#Remaining Tasks
+- [ ] Update Spotify-This-Song to default to "The Sign" by Ace of Base if left blank.
+- [ ] Add error checking to Concert-This if no band is entered.
 
